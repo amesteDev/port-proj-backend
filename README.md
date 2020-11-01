@@ -43,3 +43,9 @@ Following the same logic as the GET-variable above. The call must also contain t
 imgupl.php
 
 Send a file wrapped in formdata and get a return with the path to the stored image.
+
+***
+
+contact.php
+
+The only purpose for this endpoint is to send emails to me, change to your own e-mail. The body is constructed in the same way as calls to for example admin.php
