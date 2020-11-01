@@ -5,13 +5,23 @@ The repo contains the backend for my portfolio, all calls will return some form 
 Calls can be made to the following endpoints:
 
 index.php
-(this is used to fetch data from the database)
+
+Calls are made with a GET-variable as such: ?table=***
+Where *** must be a valid table-name from the database, change the $allowedTables to control this.
 
 admlogin.php
-(this is used to login as admin)
+Calls here are made with a body containing:
+meth: LOGIN or CHECK,
+username: username,
+password: password
+
+LOGIN or CHECK is depending on if the call is made to login or check if the user is authenticated.
 
 admin.php
-(this is used to create, update and delete resources in the database)
+Calls here can be made with POST, PUT and DELETE
+All the calls must contain a body where a key: value must be set as such:
+table: ***
+Following the same logic as the GET-variable above. The call must also contain the right amount of data that is to be stored in the table, since a check is made before storing.
 
 imgupl.php
-(used to upload images to the api. returns the path to where the imaged was stored.)
+Send a file wrapped in formdata and get a return with the path to the stored image.
