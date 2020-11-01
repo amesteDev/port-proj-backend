@@ -1,15 +1,13 @@
 <?php
 //sets headers
-header('Content-Type: application/json');
+//header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-with');
+header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Access-Control-Allow-Origin, Authorization, X-Requested-with');
 
 //includes the config-file, which in turn loads all class-files
 include('config/config.php');
 include('functions/jwt.php');
-include('functions/dataHandling.php');
-//sets up a new instance of the Querys class
-$query = new AdmContent();
 
 $call = $_SERVER['REQUEST_METHOD'];
 $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
@@ -19,7 +17,6 @@ if(checkJWT($authHeader)){
 	if(count($_FILES) > 0) {
 		$file = $_FILES['img'];
 		$target_dir = "../img/";
-		$store_dir = "/img/";
 		$target_file = $target_dir . basename($file["name"]);
 		$uploadOk = true;
 		$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
@@ -29,34 +26,36 @@ if(checkJWT($authHeader)){
         if($check !== false) {
             $uploadOk = true;
         } else {
+            echo "Det är inte en bild du försöker ladda upp";
             $uploadOk = false;
             exit();
         }
         // Check file size
         if ($file["size"] > 500000) {
+            echo "Filen får inte vara större än 500kb";
             $uploadOk = false;
         }
 
 	// Allow certain file formats
 	if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
+		echo "Du får bara ladda upp jpg, png eller gif som profilbild";
 		$uploadOk = false;
 	}
 	// Check if $uploadOk is set to 0 by an error
 	if ($uploadOk == false) {
 		$result = array("msg" => "Error with fileupload");
-
 	// if everything is ok, try to upload file
 	} else{
 		$newfilename = round(microtime(true)) . '.' . $imageFileType;
 		if (move_uploaded_file($file["tmp_name"], $target_dir . $newfilename)) {
 			$result = array("status" => $uploadOk, "path" => $target_dir . $newfilename);
 		} else {
-			$result = array("status" => $uploadOk, "msg" => "Something broke";
+			echo "Något gick fel vid uppladdning, försök igen";
 		}
 	}
 
 	} else {
-		$result = array("msg" => "You need to seend a file");
+		$result = array("msg" => "Men skicka en fil då");
 	}
 } else{
 	$result = array ('message' => 'Bort med tassarna');
